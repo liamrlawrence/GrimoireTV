@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+  sigilapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sigilapi_dev
+    env_file:
+      - env/database.env
+    ports:
+      - "3000:3000"
+    networks:
+      sigilapi-network:
+        ipv4_address: 172.30.0.10
+
+
+networks:
+  sigilapi-network:
+    external: true
+    name: gtv-net
+    ipam:
+      driver: bridge
+      config:
+        - subnet: 172.30.0.1/16

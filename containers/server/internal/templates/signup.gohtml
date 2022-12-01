@@ -1,0 +1,127 @@
+{{define "page"}}
+  <div style="min-height: 100vh;">
+{{/*
+TODO:
+  Sign Up
+  Already a member? <Log in>
+ */}}
+    <!-- SIGN UP VALIDATION & API CALL -->
+    <script type="text/javascript">
+        function errListAppend(msg) {
+            const node = document.createElement("li");
+            node.appendChild(document.createTextNode(String(msg)));
+            document.getElementById("error-list").append(node);
+        }
+
+        async function apiAuthSignUp() {
+            const errMsg = document.getElementById("error-message");
+            const errList = document.getElementById("error-list");
+            errMsg.style.display = "hidden";
+            errList.innerHTML = "";
+
+            const password = document.forms["form-signUp"].password.value
+            const conf_password = document.forms["form-signUp"].conf_password.value
+            if (password !== conf_password) {
+                errMsg.style.display = "";
+                errListAppend("passwords do not match");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('username', document.forms["form-signUp"].username.value);
+            formData.append('nickname', document.forms["form-signUp"].nickname.value);
+            formData.append('email',    document.forms["form-signUp"].email.value);
+            formData.append('password', password);
+
+            fetch('http://localhost:8080/api/auth/signup', {
+                method: 'POST',
+                body: formData
+            }).then(async function(response) {
+                switch (response.status) {
+                    case 200:
+                        errMsg.style.display = "hidden";
+                        window.location.replace("http://www.google.com");
+                        return;
+
+                    case 500:
+                        errMsg.style.display = "";
+                        errListAppend("Unknown issue, please contact a system administrator");
+                        return;
+
+                    default:
+                        errMsg.style.display = "";
+                        const data = await response.json()
+                        errListAppend(data[0]['message']);
+                        return;
+                }
+            });
+        }
+    </script>
+
+
+    <!-- SIGN UP FORM -->
+    <form name="form-signUp" style="padding-left: 30%; padding-right: 30%; padding-top: 4%;" onSubmit="apiAuthSignUp(); return false;">
+      <!-- FORM FIRST ROW -->
+      <div class="flex flex-wrap -mx-3 mb-6">
+        <!-- Username -->
+        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+          <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="form-signUp-username">
+            Username
+          </label>
+          <input name="username" class="" id="form-signUp-username" type="text" placeholder="Jane" required>
+        </div>
+        <!-- Nickname -->
+        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+          <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="form-signUp-nickname">
+            Nickname
+          </label>
+          <input name="nickname" class="" id="form-signUp-nickname" type="text" placeholder="Optional">
+        </div>
+        <!-- Email -->
+        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+          <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="form-signUp-email">
+            Email
+          </label>
+          <input name="email" class="" id="form-signUp-email" type="email" placeholder="you@example.com" required>
+        </div>
+      </div>
+      <!-- FORM SECOND ROW -->
+      <div class="flex flex-wrap -mx-3 mb-6">
+        <!-- Password -->
+        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+          <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="form-signUp-password">
+            Password
+          </label>
+          <input name="password" class="" id="form-signUp-password" type="text" placeholder="password" required>
+        </div>
+        <!-- Confirm Password -->
+        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+          <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="form-signUp-conf_password">
+            Re-type Password
+          </label>
+          <input name="conf_password" class="" id="form-signUp-conf_password" type="text" placeholder="password" required>
+        </div>
+      </div>
+      <input type="submit" value="Sign up">
+    </form>
+
+    <!-- ERROR MESSAGE -->
+    <div id="error-message" style="display: none;" class="rounded-md bg-red-50 p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <!-- Heroicon name: mini/x-circle -->
+          <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800">There was an error while registering your account</h3>
+          <div class="mt-2 text-sm text-red-700">
+            <ul id = "error-list" role="list" class="list-disc space-y-1 pl-5">
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{{end}}

@@ -1,0 +1,48 @@
+<!-- PAGE TEMPLATE -->
+<!DOCTYPE html>
+  <head>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <title>GrimTV</title>
+  </head>
+
+  <body>
+    {{template "header"}}
+
+    {{template "page" .}}
+
+    {{template "footer"}}
+  </body>
+</html>
+
+
+<!-- HEADER -->
+{{define "header"}}
+  <div>
+    <header class="text-white bg-gradient-to-r from-blue-800 to-indigo-900">
+      <nav class="px-8 py-6 flex items-center">
+        <div class="pr-10 text-4xl font-serif">GrimoireTV</div>
+        <div class="flex flex-grow">
+          <div class="pr-8"><a class="text-lg font-semibolg hover:text-blue-100" href="/">Home</a></div>
+          <div class="pr-8"><a class="text-lg font-semibolg hover:text-blue-100 items-center" href="/contact">Contact</a></div>
+        </div>
+        <div class="flex">
+          <div class="pr-4"><a class="pr-4" href="#">Log in</a></div>
+          <div class="pr-4"><a class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded" href="/signup">Sign up</a></div>
+        </div>
+      </nav>
+    </header>
+  </div>
+{{end}}
+
+
+<!-- FOOTER -->
+{{define "footer"}}
+  <div>
+    <footer class="bg-gray-50">
+      <div class="text-gray-700 text-center p-4" style="background-color: rgba(0, 0, 0, 0.2);">
+        &copy; <script>document.write((new Date().getFullYear()).toString());</script> Copyright:
+        <a class="text-gray-800" href="https://google.com/">Grimoire Solutions</a>
+      </div>
+    </footer>
+  </div>
+{{end}}
